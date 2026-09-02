@@ -5,12 +5,8 @@ __pycache__/
 # Sanal ortam (Bağımlılıklar repoya yüklenmez)
 venv/
 
-# Ham ve işlenmiş veri dosyaları (Veri setleri repoda tutulmaz)
-ham_veriler/
-*.xlsx
 
-# Hata logları ve ekran görüntüleri
-*.png
+# *.png
 
 # macOS sistem dosyaları
 .DS_Store
