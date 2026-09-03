@@ -24,7 +24,7 @@ try:
     tablo_adi = "izto_firmalar"
     
     # Veriyi MySQL'e yaz
-    df.to_sql(name=tablo_adi, con=motor, if_exists='replace', index=False)
+    df.to_sql(name=tablo_adi, con=motor, if_exists='fail', index=False)
     print("3. Harika! Excel'deki tüm firmalar başarıyla MySQL'e aktarıldı. ")
 
 except Exception as e:

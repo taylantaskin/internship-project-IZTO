@@ -276,3 +276,4 @@ SELECT * FROM ilceler ORDER BY ilce_adi;
 UPDATE firmalar SET ilce_id= NULL
 WHERE ilce_id =0;
 
+ALTER TABLE firmalar RENAME COLUMN dijital_varlıklar TO dijital_varliklar;
