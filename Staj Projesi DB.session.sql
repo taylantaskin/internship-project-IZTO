@@ -277,3 +277,11 @@ UPDATE firmalar SET ilce_id= NULL
 WHERE ilce_id =0;
 
 ALTER TABLE firmalar RENAME COLUMN dijital_varlıklar TO dijital_varliklar;
+
+--fk kısıtlamaları 
+
+ALTER TABLE firmalar ADD CONSTRAINT fk_firmla_meslek
+FOREIGN KEY (meslek_id) REFERENCES meslek_gruplari(meslek_id);
+
+ALTER TABLE firmalar ADD CONSTRAINT fk_firma_nace
+FOREIGN KEY (nace_id) REFERENCES nace_kodlari(id);
