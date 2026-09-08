@@ -20,7 +20,7 @@ public class Firma {
     private Integer ticariSicilNo;
 
     @Column(
-        name="unavi"
+        name="unvani"
     )
     private String unvani;
 

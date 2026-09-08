@@ -20,7 +20,7 @@ public class Ilce {
     @Column ( 
         name="ilce_id"
     )
-    private Integer ildeId;
+    private Integer ilceId;
 
     @Column (
         name="ilce_ad"
