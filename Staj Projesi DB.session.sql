@@ -285,3 +285,5 @@ FOREIGN KEY (meslek_id) REFERENCES meslek_gruplari(meslek_id);
 
 ALTER TABLE firmalar ADD CONSTRAINT fk_firma_nace
 FOREIGN KEY (nace_id) REFERENCES nace_kodlari(id);
+
+SELECT dijital_varliklar FROM firmalar LIMIT 10;
