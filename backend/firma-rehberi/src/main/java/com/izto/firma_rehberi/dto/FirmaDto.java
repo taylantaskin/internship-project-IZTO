@@ -1,6 +1,7 @@
 package com.izto.firma_rehberi.dto;
 
-public record FirmaDto( Integer odaSicilNo,
+public record FirmaDto(
+    Integer odaSicilNo,
     Integer ticariSicilNo,
     String unvani,
     String tescilliAdresi,

@@ -15,12 +15,12 @@ public interface FirmaRepository extends JpaRepository<Firma, Integer> {
         where
          (:unvani IS NULL OR f.unvani LIKE CONCAT ('%', :unvani, '%'))
         AND 
-        (:meslekGrubuAd IS NULL OR f.meslekGrubu.ad= :meslekGrubuAd)
+        (:meslekGrubuAd IS NULL OR f.meslekGrubu.meslekAdi LIKE CONCAT ('%', :meslekGrubuAd, '%'))
         AND
-         (:ilceAd IS NULL OR f.ilce.ilceAdi = :ilceAd)
+         (:ilceAd IS NULL OR f.ilce.ilceAdi LIKE CONCAT ('%', :ilceAd, '%'))
             """)
 //%ABC% ;Bu da ünvan içerisinde herhangi bir yerde ABC geçen firmaları bulur.
-//Firmanın meslek grubunun adı, kullanıcının gönderdiği meslek grubu adına eşit mi?
+
     Page<Firma> filtrele( //Sonuçların tamamını List<Firma> olarak verme; bunları sayfalandırılmış şekilde getir.
         @Param("unvani")
          String unvani,

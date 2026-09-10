@@ -27,7 +27,7 @@ public class Firma {
     @Column(
         name="tescilli_adresi"
     )
-    private String tescilliAadresi;
+    private String tescilliAdresi;
     
     @Column(
         name="web_adresi"

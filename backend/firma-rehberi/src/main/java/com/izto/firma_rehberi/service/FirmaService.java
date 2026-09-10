@@ -3,7 +3,11 @@ package com.izto.firma_rehberi.service;
 import  com.izto.firma_rehberi.dto.FirmaDto;
 import com.izto.firma_rehberi.dto.FirmaSorguSonucDto;
 import com.izto.firma_rehberi.entity.Firma;
+import com .izto.firma_rehberi.entity.Ilce;
+import com.izto.firma_rehberi.entity.MeslekGrubu;
 import com.izto.firma_rehberi.repository.FirmaRepository;
+import com.izto.firma_rehberi.repository.IlceRepository;
+import com.izto.firma_rehberi.repository.MeslekGrubuRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +19,13 @@ import java .util.ArrayList;
 @Service
 public class FirmaService {
     private final FirmaRepository firmaRepository;
+    private final IlceRepository ilceRepository;
+    private final MeslekGrubuRepository meslekGrubuRepository;
 
-    public FirmaService (FirmaRepository firmaRepository){
+    public FirmaService (FirmaRepository firmaRepository, IlceRepository ilceRepository, MeslekGrubuRepository meslekGrubuRepository){
         this.firmaRepository = firmaRepository;
+        this.ilceRepository = ilceRepository;
+        this.meslekGrubuRepository = meslekGrubuRepository;
     }
 
     public FirmaSorguSonucDto sorgula (String unvani, String meslekGrubuAd, String ilceAd, int sayfa, int sayfaBoyutu){
@@ -60,13 +68,24 @@ public class FirmaService {
             f.getOdaSicilNo(),
             f.getTicariSicilNo(),
             f.getUnvani(),
-            f.getTescilliAadresi(),
+            f.getTescilliAdresi(),
             f.getWebAdresi(),
             meslek, ilce,nace
         );
-
-
     }
+    public List<String> ilceleriGetir(){
+            List<Ilce> ilceler=ilceRepository.findAll();
+            List<String> sonuc = new ArrayList<>();
+            for (Ilce x : ilceler){
+                sonuc.add(x.getIlceAdi());
+            }
+            return sonuc;
+    }
+    // üstteki fonk ile aynı sadece stream ve map kullanarak daha kısa yazdık
+    public List<String> meslekGrubuGetir(){
+        return meslekGrubuRepository.findAll().stream().map(MeslekGrubu::getMeslekAdi).toList();
+    }
+
 }
 
 

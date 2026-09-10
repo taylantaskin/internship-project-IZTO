@@ -23,7 +23,7 @@ public class Ilce {
     private Integer ilceId;
 
     @Column (
-        name="ilce_ad"
+        name="ilce_adi"
     )
     private String ilceAdi;
     

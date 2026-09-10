@@ -287,3 +287,12 @@ ALTER TABLE firmalar ADD CONSTRAINT fk_firma_nace
 FOREIGN KEY (nace_id) REFERENCES nace_kodlari(id);
 
 SELECT dijital_varliklar FROM firmalar LIMIT 10;
+
+
+SELECT COUNT(*) FROM firmalar f JOIN ilceler i 
+ON f.ilce_id = i.ilce_id
+WHERE i.ilce_adi LIKE '%Konak%';
+
+SELECT DISTINCT ilce_adi
+FROM ilceler
+ORDER BY ilce_adi;

@@ -1,0 +1,103 @@
+{
+  "info": {
+    "_postman_id": "60f7eb95-0b60-4bfe-9b22-1661bf053d31",
+    "name": "İZTO firma api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51397250",
+    "_collection_link": "https://go.postman.co/collection/51397250-60f7eb95-0b60-4bfe-9b22-1661bf053d31?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "tüm firmalar",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/firmalar",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "firmalar"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "konak firmalar",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/firmalar?ilceAd=KONAK&sayfa=1&sayfaBoyutu=5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "firmalar"
+          ],
+          "query": [
+            {
+              "key": "ilceAd",
+              "value": "KONAK"
+            },
+            {
+              "key": "sayfa",
+              "value": "1"
+            },
+            {
+              "key": "sayfaBoyutu",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ilce listesi",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/firmalar/ilceler",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "firmalar",
+            "ilceler"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "meslek listesi",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/firmalar/meslek-gruplari",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "firmalar",
+            "meslek-gruplari"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

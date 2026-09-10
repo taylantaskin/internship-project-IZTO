@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController 
+import java.util.List;
+
+@RestController  //HTTP üzerinden gelen isteği al, içindeki bilgileri çıkar ve uygun Service metodunu çağır
 @RequestMapping("/firmalar") //Bu controllerin tüm endpointleri /firmalar ile başlar
 public class FirmaController {
     private final FirmaService firmaService;
@@ -26,4 +28,17 @@ public class FirmaController {
     ){
         return firmaService.sorgula(unvani, meslekGrubuAd, ilceAd, sayfa, sayfaBoyutu);
     }
+
+    @GetMapping("/ilceler")
+    public List<String> ilceleriGetir(){
+        return firmaService.ilceleriGetir();
+    }
+    
+    @GetMapping("/meslek-gruplari")
+    public List<String> meslekGruplariniGetir(){
+        return firmaService.meslekGrubuGetir();
+    }
+    
+
+      
 }
