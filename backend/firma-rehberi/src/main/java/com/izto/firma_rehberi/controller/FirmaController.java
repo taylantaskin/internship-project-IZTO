@@ -18,7 +18,7 @@ public class FirmaController {
         this.firmaService = firmaService;
     }
 
-    @GetMapping
+    @GetMapping // GET isteği geldiğinde bu metod karşılık verir. Örn: /firmalar?unvani=ABC&meslekGrubuAd=XYZ&ilceAd=123
     public FirmaSorguSonucDto firmaGetir(
         @RequestParam (required= false) String unvani,  //urlden gelen parametreleri yakalar ,kullanıcı göndermesse bile program çökmez null olarak alır 
         @RequestParam (required =false) String meslekGrubuAd,
@@ -26,7 +26,14 @@ public class FirmaController {
         @RequestParam (defaultValue="1") int sayfa, // varsayılan olarak 1. sayfa ve 50 
         @RequestParam (defaultValue="50") int sayfaBoyutu
     ){
-        return firmaService.sorgula(unvani, meslekGrubuAd, ilceAd, sayfa, sayfaBoyutu);
+        FirmaSorguSonucDto sonuc = firmaService.sorgula( // firmaService sorgula metodunu çağırır ve gelen parametreleri ona iletir
+            unvani,
+            meslekGrubuAd,
+            ilceAd,
+            sayfa,
+            sayfaBoyutu
+        );
+        return sonuc; // frontend'e gönderilecek sonuçları içeren DTO nesnesi
     }
 
     @GetMapping("/ilceler")

@@ -29,11 +29,9 @@ class FirmaServiceTest {
     private FirmaRepository firmaRepository;
     @Mock
     private IlceRepository ilceRepository;
-    @Mock
-    private MeslekGrubuRepository meslekGrubuRepository;
+    @Mock private MeslekGrubuRepository meslekGrubuRepository;
 
-    @InjectMocks 
-    private FirmaService firmaService;
+    @InjectMocks private FirmaService firmaService;
 
     @Test 
     void TumSonuclar(){
@@ -42,7 +40,7 @@ class FirmaServiceTest {
         ornekFirma.setUnvani("ornek firma");
 
         Pageable pageable = PageRequest.of(0, 50);
-        Page<Firma> sahteSayfa = new PageImpl<>(List.of(ornekFirma), pageable, 1);
+        Page<Firma> sahteSayfa = new PageImpl<Firma>(List.of(ornekFirma), pageable, 1);
 
         when(firmaRepository.filtrele(any(), any(), any(), any())).thenReturn(sahteSayfa);
 
@@ -57,8 +55,8 @@ class FirmaServiceTest {
 
     @Test
     void BosListe(){
-        Pageable pageable = PageRequest.of(0,50);
-        Page<Firma> bosSayfa = new PageImpl<>(List.of(), pageable, 0);
+        Pageable pageable = PageRequest.of(0,50);// Frontend sayfaları 1'den başlatır ama Spring Boot Pagination (sayfalama) 0'dan başlar
+        Page<Firma> bosSayfa = new PageImpl<>(List.of(), pageable, 0);//Spring'in hazır sınıfını kullanarak boş bir sayfa oluşturuyoruz.
 
         when(firmaRepository.filtrele(any(), any(), any(), any())).thenReturn(bosSayfa);
 
