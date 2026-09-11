@@ -16,7 +16,7 @@ public class FirmaRehberiApplication {
 	public CommandLineRunner commandLineRunner(FirmaRepository firmaRepository) {
 		return args -> {
 			long count = firmaRepository.count();
-            System.out.println("=========================================");
+            System.out.println( "=========================================");
             System.out.println("VERİTABANI BAĞLANTISI BAŞARILI!");
             System.out.println("Sistemde Kayıtlı Toplam Firma Sayısı: " + count);
             System.out.println("=========================================");
