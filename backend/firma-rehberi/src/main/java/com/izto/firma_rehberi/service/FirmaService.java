@@ -28,25 +28,47 @@ public class FirmaService {
         this.meslekGrubuRepository = meslekGrubuRepository;
     }
 
-    public FirmaSorguSonucDto sorgula (String unvani, String meslekGrubuAd, String ilceAd, int sayfa, int sayfaBoyutu){
+    public FirmaSorguSonucDto sorgula (String unvani, String meslekGrubuAd, String ilceAd,String naceKodu, int sayfa, int sayfaBoyutu){
 
         Pageable pageable = PageRequest.of(sayfa-1, sayfaBoyutu);// // Frontend sayfaları 1'den başlatır ama Spring Boot Pagination (sayfalama) 0'dan başlar.
 
 
-        //2.adımda yazdığımız JPQL filteleme etodunu çağırır, 
-        Page<Firma> sonuc =firmaRepository.filtrele(unvani, meslekGrubuAd, ilceAd, pageable);
+        //2.adımda yazdığımız JPQL filteleme metodunu çağırır, 
+        Page<Firma> sonuc =firmaRepository.filtrele(unvani, meslekGrubuAd, ilceAd, naceKodu, pageable); // Page<Firma> sadece "firmaların listesi" değil. Listenin yanında pagination bilgilerini de taşıyan bir nesne.x
 
         //Sonuçları DTO'ya dönüştürmek için boş bir liste oluşturuyoruz
         List<FirmaDto> frontendListesi = new ArrayList<>();
 
-        for (Firma hamFirma : sonuc.getContent()){
-            FirmaDto temizFirma = toDto(hamFirma);
+        List<Firma> firmalar=sonuc.getContent();
+        for (int i=0; i<firmalar.size(); i++){
+            Firma hamFirma =firmalar.get(i);
+            FirmaDto temizFirma =toDto(hamFirma);
             frontendListesi.add(temizFirma);
         }
 
+
+        //(for-each)
+        /*for (Firma hamFirma : sonuc.getContent()){
+            FirmaDto temizFirma = toDto(hamFirma);
+            frontendListesi.add(temizFirma);
+        }
+        
+        List<FirmaDto> frontendListesi =
+        sonuc.getContent()
+             .stream()
+             .map(this::toDto)
+             .toList(); 
+        yukardaki for ile aynı
+        */
+
         long toplamFirmaSayisi = sonuc.getTotalElements();
         
-        return new FirmaSorguSonucDto(toplamFirmaSayisi, sayfa, sayfaBoyutu, frontendListesi);
+        return new FirmaSorguSonucDto(
+            toplamFirmaSayisi,
+            sayfa,
+            sayfaBoyutu,
+            frontendListesi
+        );
     }
 
     private FirmaDto toDto (Firma f){

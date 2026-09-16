@@ -42,10 +42,10 @@ class FirmaServiceTest {
         Pageable pageable = PageRequest.of(0, 50);
         Page<Firma> sahteSayfa = new PageImpl<Firma>(List.of(ornekFirma), pageable, 1);
 
-        when(firmaRepository.filtrele(any(), any(), any(), any())).thenReturn(sahteSayfa);
+        when(firmaRepository.filtrele(any(), any(), any(), any(), any())).thenReturn(sahteSayfa);
 
         // çalıştırma
-        var sonuc = firmaService.sorgula(null, null, null, 1, 50);
+        var sonuc = firmaService.sorgula(null, null, null,null, 1, 50);
 
         //doğrula
 
@@ -58,11 +58,11 @@ class FirmaServiceTest {
         Pageable pageable = PageRequest.of(0,50);// Frontend sayfaları 1'den başlatır ama Spring Boot Pagination (sayfalama) 0'dan başlar
         Page<Firma> bosSayfa = new PageImpl<>(List.of(), pageable, 0);//Spring'in hazır sınıfını kullanarak boş bir sayfa oluşturuyoruz.
 
-        when(firmaRepository.filtrele(any(), any(), any(), any())).thenReturn(bosSayfa);
+        when(firmaRepository.filtrele(any(), any(), any(), any(), any ())).thenReturn(bosSayfa);
 
         //çalıştırma
 
-        var sonuc = firmaService.sorgula("HOGWARTS", null, null, 1, 50);
+        var sonuc = firmaService.sorgula("HOGWARTS", null, null,null, 1, 50);
 
         assertEquals(0, sonuc.toplam());
         assertEquals(0, sonuc.veriler().size());

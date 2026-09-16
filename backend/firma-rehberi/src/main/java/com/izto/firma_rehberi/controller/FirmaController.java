@@ -23,6 +23,7 @@ public class FirmaController {
         @RequestParam (required= false) String unvani,  //urlden gelen parametreleri yakalar ,kullanıcı göndermesse bile program çökmez null olarak alır 
         @RequestParam (required =false) String meslekGrubuAd,
         @RequestParam (required = false) String ilceAd,
+        @RequestParam (required =false) String naceKodu,
         @RequestParam (defaultValue="1") int sayfa, // varsayılan olarak 1. sayfa ve 50 
         @RequestParam (defaultValue="50") int sayfaBoyutu
     ){
@@ -30,6 +31,7 @@ public class FirmaController {
             unvani,
             meslekGrubuAd,
             ilceAd,
+            naceKodu,
             sayfa,
             sayfaBoyutu
         );

@@ -1,6 +1,19 @@
 
 const API_BASE_URL = "http://localhost:8080/firmalar";
 
+export interface FirmaDto{
+    odaSicilNo: number;
+    ticariSicilNo: number;
+    unvani :string;
+    tescilliAdresi: string;
+    webAdresi: string;
+    dijitalVarliklar:string;
+    meslekGrubuAd: string;
+    ilceAdi:string;
+    naceKoduAd: string;
+
+}
+
 interface SorguParametreleri{
     unvani? : string; //unvani: string | undefined yani bu parametre opsiyonel demek "?"
     meslekGrubuAd?: string;
