@@ -18,7 +18,7 @@ public interface FirmaRepository extends JpaRepository<Firma, Integer> { // firm
         (:meslekGrubuAd IS NULL OR f.meslekGrubu.meslekAdi LIKE CONCAT ('%', :meslekGrubuAd, '%'))
         AND
          (:ilceAd IS NULL OR f.ilce.ilceAdi LIKE CONCAT ('%', :ilceAd, '%'))
-        AND (:naceKodu IS NULL OR f.naceKodu.naceAdi LIKE CONCAT ('%', :naceKodu, '%'))
+        AND (:naceKodu IS NULL OR f.naceKodu.naceKodu LIKE CONCAT ('%', :naceKodu, '%'))
         """)
 //%ABC% ;Bu da ünvan içerisinde herhangi bir yerde ABC geçen firmaları bulur.
 

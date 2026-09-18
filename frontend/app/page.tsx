@@ -23,21 +23,52 @@ export default function Home() {
   const [yukleniyor, setYukleniyor] = useState(false);
   const [hata, setHata] = useState<string | null>(null);
 
+  const [naceKodu1, setNace1]= useState("");
+  const [naceKodu2, setNace2] = useState("");
+  const [naceKodu3, setNace3] = useState("");
+
+  const [uyari, setUyari] = useState<string | null> (null);
+
+
   // Sayfa ilk açıldığında dropdown listelerini bir kez çek
-  useEffect(() => {
-    getIlceler().then(setIlceler).catch(() => {});
-    getMeslekGruplari().then(setMeslekGruplari).catch(() => {});
+  useEffect(
+    () => {
+    getIlceler().then(setIlceler).catch(
+      () => {}
+    );
+    getMeslekGruplari().then(setMeslekGruplari).catch(
+      () => {}
+    );
   }, []);
+
+  const handleSorgula = () => {
+
+    const naceKoduTam = [naceKodu1,naceKodu2,naceKodu3].filter(Boolean).join(".");
+    
+    const birKriterSecildi= Boolean ( 
+      unvan.trim() || (ilce && ilce!=="") || (meslekGrubu && meslekGrubu!=="") || naceKoduTam
+    )
+    if (!birKriterSecildi) {
+      setUyari("Lütfen Kriter Seçiniz!!!");
+      setTimeout(() => setUyari(null), 4000);
+      return;
+    }
+    setUyari(null);
+    sorgulaYap(1);
+  };
 
   const sorgulaYap = (hedefSayfa: number) => {
     setYukleniyor(true);
     setHata(null);
     
+    const naceKoduTam = [naceKodu1,naceKodu2,naceKodu3].filter(Boolean).join(".");
+
     // DÜZELTME: Backend'in beklediği parametre isimleriyle eşleştirildi
     getFirmalar({ 
       unvani: unvan, 
       meslekGrubuAd: meslekGrubu, 
       ilceAd: ilce, 
+      naceKodu:naceKoduTam  || undefined,
       sayfa: hedefSayfa 
     })
       .then((sonuc) => {
@@ -50,12 +81,44 @@ export default function Home() {
       .finally(() => setYukleniyor(false));
   };
 
-  const handleSorgula = () => {
-    sorgulaYap(1); // yeni arama her zaman 1. sayfadan başlar
+  const handleNaceYardim = () => {
+    if (!meslekGrubu || meslekGrubu === "Seçiniz") {
+      setUyari("Lütfen Meslek Grubunu Seçiniz!!!");
+      setTimeout(() => setUyari(null), 4000);
+      return;
+    }
+    setUyari(null);
   };
+  
 
   return (
     <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#091424] text-gray-200' : 'bg-[#f4f7f9] text-gray-900'}`}>
+
+      {uyari && (
+        <div className="fixed top-6 right-6 z-50 bg-[#e67e22] text-white px-5 py-3 rounded shadow-lg flex items-center gap-3 animate-fade-in border border-orange-600">
+          <div className="flex flex-col">
+            <span className="font-bold text-xs">Bilgi</span>
+            <span className="text-sm font-medium">{uyari}</span>
+          </div>
+          <button onClick={() => setUyari(null)} className="ml-4 text-white/80 hover:text-white text-lg font-bold leading-none">
+            ×
+          </button>
+        </div>
+      )}
+
+      {yukleniyor && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[1px] flex flex-col items-center justify-center">
+          <div className="bg-white/90 dark:bg-[#0f1f38]/90 p-6 rounded-xl shadow-2xl flex flex-col items-center gap-3 border border-gray-200 dark:border-[#1f375b]">
+            <svg className="animate-spin h-10 w-10 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300 tracking-wide">
+              Lütfen Bekleyiniz...
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Üst Menü (Navbar) */}
       <header className={`h-16 flex items-center justify-between px-6 border-b shadow-sm transition-colors duration-300 ${isDarkMode ? 'bg-[#050a13] border-[#162947]' : 'bg-white border-gray-200'}`}>
@@ -136,7 +199,7 @@ export default function Home() {
                       className={`w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 appearance-none ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-gray-300' : 'bg-white border-gray-300 text-gray-700'}`}
                     >
                       <option value="">Seçiniz</option>
-                      {meslekGruplari.map((mg) => (
+                      {meslekGruplari.map((mg) => ( // Backend'deki Java Stream map ile aynı temel fikre sahip: bir koleksiyondaki elemanları başka bir forma dönüştürmek.
                         <option key={mg} value={mg}>{mg}</option>
                       ))}
                     </select>
@@ -149,7 +212,7 @@ export default function Home() {
                       className={`w-full border rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 appearance-none ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-gray-300' : 'bg-white border-gray-300 text-gray-700'}`}
                     >
                       <option value="">Seçiniz</option>
-                      {ilceler.map((il) => (
+                      {ilceler.map((il) => ( // JavaScript array ↓ map() HTML option'ları oluşturmak için kullanılır. Her ilçe için bir <option> elementi yaratılır.
                         <option key={il} value={il}>{il}</option>
                       ))}
                     </select>
@@ -158,17 +221,44 @@ export default function Home() {
 
                 {/* Butonlar ve Sayı Kartı */}
                 <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-4 pt-2">
+                  {/* Nace Kodu Bölümü */}
                   <div className="flex-1 max-w-[300px]">
-                    <label className={`block text-[11px] font-bold uppercase mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Nace Kodu</label>
+                    <label className={`block text-[11px] font-bold uppercase mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Nace Kodu
+                    </label>
                     <div className="flex gap-2">
-                      <input type="text" placeholder="00" className={`w-1/3 text-center border rounded px-2 py-2 text-sm font-bold focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white placeholder-gray-600' : 'bg-white border-gray-300 text-black'}`} />
-                      <input type="text" placeholder="00" className={`w-1/3 text-center border rounded px-2 py-2 text-sm font-bold focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white placeholder-gray-600' : 'bg-white border-gray-300 text-black'}`} />
-                      <input type="text" placeholder="00" className={`w-1/3 text-center border rounded px-2 py-2 text-sm font-bold focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white placeholder-gray-600' : 'bg-white border-gray-300 text-black'}`} />
+                      <input 
+                        type="text" 
+                        maxLength={2}
+                        placeholder="00" 
+                        value={naceKodu1}
+                        onChange={(e) => setNace1(e.target.value)}
+                        className={`w-1/3 text-center border rounded px-2 py-2 text-sm font-bold focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white placeholder-gray-600' : 'bg-white border-gray-300 text-black'}`} 
+                      />
+                      <input 
+                        type="text" 
+                        maxLength={2}
+                        placeholder="00" 
+                        value={naceKodu2}
+                        onChange={(e) => setNace2(e.target.value)}
+                        className={`w-1/3 text-center border rounded px-2 py-2 text-sm font-bold focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white placeholder-gray-600' : 'bg-white border-gray-300 text-black'}`} 
+                      />
+                      <input 
+                        type="text" 
+                        maxLength={2}
+                        placeholder="00" 
+                        value={naceKodu3}
+                        onChange={(e) => setNace3(e.target.value)}
+                        className={`w-1/3 text-center border rounded px-2 py-2 text-sm font-bold focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white placeholder-gray-600' : 'bg-white border-gray-300 text-black'}`} 
+                      />
                     </div>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    <button className="bg-[#00a8ff] hover:bg-[#0097e6] text-white font-bold py-2 px-6 rounded text-sm transition">
+                    <button
+                    type="button"
+                    onClick={handleNaceYardim}
+                    className="bg-[#00a8ff] hover:bg-[#0097e6] text-white font-bold py-2 px-6 rounded text-sm transition">
                       Nace Kodu Yardım
                     </button>
                     <button onClick={handleSorgula} className="bg-[#4cd137] hover:bg-[#44bd32] text-white font-bold py-2 px-10 rounded text-sm transition">

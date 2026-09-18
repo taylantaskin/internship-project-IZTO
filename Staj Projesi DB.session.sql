@@ -296,3 +296,10 @@ WHERE i.ilce_adi LIKE '%Konak%';
 SELECT DISTINCT ilce_adi
 FROM ilceler
 ORDER BY ilce_adi;
+
+DESCRIBE nace_kodlari;
+SELECT * FROM nace_kodlari LIMIT 20;
+
+SELECT COUNT (DISTINCT id)  FROM nace_kodlari;
+
+SELECT n.id, n.nace_adi, COUNT(f.oda_sicil_no) FROM firmalar f LEFT JOIN nace_kodlari n ON f.nace_id = n.id GROUP BY n.id, n.nace_adi 

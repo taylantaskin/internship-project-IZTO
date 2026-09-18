@@ -18,6 +18,7 @@ interface SorguParametreleri{
     unvani? : string; //unvani: string | undefined yani bu parametre opsiyonel demek "?"
     meslekGrubuAd?: string;
     ilceAd?:string;
+    naceKodu?: string;
     sayfa?: number; //number js deki int ve float gibi sayısal değerleri kapsar
 }
 
@@ -33,6 +34,10 @@ function parametreleriHazirla(params: SorguParametreleri): string{ // java aksin
     
     if (params.ilceAd){
         query.set("ilceAd", params.ilceAd);
+    }
+
+    if (params.naceKodu){
+        query.set("naceKodu", params.naceKodu);
     }
 
     if (params.sayfa ){
