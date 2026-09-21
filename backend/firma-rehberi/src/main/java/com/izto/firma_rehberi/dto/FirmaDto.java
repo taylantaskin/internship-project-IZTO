@@ -7,7 +7,7 @@ public record FirmaDto(
     String tescilliAdresi,
     String webAdresi,
     String meslekGrubuAd,
-    String ilceAd,
+    String ilceAdi,
     String naceKoduAd
 ) {}
 

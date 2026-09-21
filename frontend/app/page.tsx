@@ -122,7 +122,6 @@ export default function Home() {
   };
 
   function handleExcelIndir (){
-
     const excelVerisi =[];
     for (let i =0; i < firmalar.length; i++){
       const firma =firmalar[i];
@@ -167,8 +166,6 @@ export default function Home() {
     }
     setTimeout(uyariyiKapat,4000);
     */
-
-
     // Elimizdeki düz (flat) JavaScript dizisini (JSON objelerinden oluşan excelVerisi listesini), Excel'in anlayabileceği "çalışma sayfası" (worksheet) formatına dönüştürür.
     const worksheet =XLSX.utils.json_to_sheet(excelVerisi);
     //Hafızada yepyeni, tamamen boş bir Excel çalışma kitabı (workbook) dosyası oluşturur.
@@ -180,7 +177,6 @@ export default function Home() {
   }
 
   
-
   return (
     <div className={`min-h-screen flex flex-col font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#091424] text-gray-200' : 'bg-[#f4f7f9] text-gray-900'}`}>
 
@@ -354,8 +350,22 @@ export default function Home() {
                     <button onClick={handleSorgula} className="bg-[#4cd137] hover:bg-[#44bd32] text-white font-bold py-2 px-10 rounded text-sm transition">
                       Sorgula
                     </button>
-                    <button className="bg-[#4cd137] hover:bg-[#44bd32] text-white font-bold py-2 px-6 rounded text-sm transition flex items-center gap-2">
-                      <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 384 512" className="w-4 h-4" xmlns="http://www.w3.org/2000/svg"><path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L222.4 341.6c-2.7 3-7.2 3-9.8 0l-16-17.7c-2.7-3-2.7-7.8 0-10.8l38.2-42.3h-100c-3.9 0-7-3.1-7-7v-20c0-3.9 3.1-7 7-7h100l-38.2-42.3c-2.7-3-2.7-7.8 0-10.8l16-17.7c2.7-3 7.2-3 9.8 0l61.7 68.3c3.1 3.5 3.1 9 0 12.4zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z"></path></svg>
+                      <button
+                      type="button"
+                      onClick={() => handleExcelIndir()}
+                      disabled={firmalar.length === 0 || yukleniyor}
+                      className="bg-[#4cd137] hover:bg-[#44bd32] text-white font-bold py-2 px-6 rounded text-sm transition flex items-center gap-2 disabled:bg-gray-400"
+                    >
+                      <svg
+                        stroke="currentColor"
+                        fill="currentColor"
+                        strokeWidth="0"
+                        viewBox="0 0 384 512"
+                        className="w-4 h-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm60.1 106.5L222.4 341.6c-2.7 3-7.2 3-9.8 0l-16-17.7c-2.7-3-2.7-7.8 0-10.8l38.2-42.3h-100c-3.9 0-7-3.1-7-7v-20c0-3.9 3.1-7 7-7h100l-38.2-42.3c-2.7-3-2.7-7.8 0-10.8l16-17.7c2.7-3 7.2-3 9.8 0l61.7 68.3c3.1 3.5 3.1 9 0 12.4zM384 121.9v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z" />
+                      </svg>
                       Excel
                     </button>
 
