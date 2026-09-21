@@ -11,7 +11,12 @@ export interface FirmaDto{
     meslekGrubuAd: string;
     ilceAdi:string;
     naceKoduAd: string;
+}
 
+export interface NaceDto{
+    id: number;
+    naceKodu:string;
+    naceAdi:string;
 }
 
 interface SorguParametreleri{
@@ -82,5 +87,20 @@ export async function getMeslekGruplari(){
     const data= await response.json();
     return data;
 }
+
+export async function getNaceKodlariByMeslek(meslekGrubuAd: string): Promise<NaceDto[]>{
+    
+    const params= new URLSearchParams(
+        {
+            meslekGrubuAd
+        }
+    );
+    const res = await fetch(
+        `${API_BASE_URL}/nace-kodlari?${params.toString()}`
+    );
+    if (!res.ok) throw new Error("Nace kodları çekilemedi");
+    return res.json();
+}
+
 
 

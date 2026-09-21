@@ -1,7 +1,9 @@
 package com.izto.firma_rehberi.controller;
 
+import com.izto.firma_rehberi.entity.NaceKodu;
 import com.izto.firma_rehberi.dto.FirmaSorguSonucDto;
 import com.izto.firma_rehberi.service.FirmaService;
+import com.izto.firma_rehberi.repository.NaceKoduRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,9 +15,11 @@ import java.util.List;
 @RequestMapping("/firmalar") //Bu controllerin tüm endpointleri /firmalar ile başlar
 public class FirmaController {
     private final FirmaService firmaService;
+    private final NaceKoduRepository naceKoduRepository;
 
-    public FirmaController (FirmaService firmaService){
+    public FirmaController (FirmaService firmaService, NaceKoduRepository naceKoduRepository) {
         this.firmaService = firmaService;
+        this.naceKoduRepository = naceKoduRepository;
     }
 
     @GetMapping // GET isteği geldiğinde bu metod karşılık verir. Örn: /firmalar?unvani=ABC&meslekGrubuAd=XYZ&ilceAd=123
@@ -48,6 +52,12 @@ public class FirmaController {
         return firmaService.meslekGrubuGetir();
     }
     
-
+    @GetMapping("/nace-kodlari")
+    public List<NaceKodu> meslegeGoreNaceGetir(
+        @RequestParam 
+        String meslekGrubuAd
+    ){
+        return naceKoduRepository.findByMeslekGrubuAdi(meslekGrubuAd);
+    }
       
 }

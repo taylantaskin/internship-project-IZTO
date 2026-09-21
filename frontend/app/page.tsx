@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getFirmalar, getIlceler, getMeslekGruplari, FirmaDto } from "../lib/api";
+import { getFirmalar, getIlceler, getMeslekGruplari, FirmaDto ,getNaceKodlariByMeslek,NaceDto} from "../lib/api";
+import * as XLSX from "xlsx";
 
 export default function Home() {
   const [isSearched, setIsSearched] = useState(false);
@@ -28,6 +29,11 @@ export default function Home() {
   const [naceKodu3, setNace3] = useState("");
 
   const [uyari, setUyari] = useState<string | null> (null);
+
+  const [naceYardimAcik, setNaceYardimAcik] = useState(false);
+  const [naceListesi, setNaceListesi] = useState<NaceDto[]>([]);
+  const [naceFiltreKod, setNaceFiltreKod] = useState("");
+  const [naceFiltreAd, setNaceFiltreAd] = useState("");
 
 
   // Sayfa ilk açıldığında dropdown listelerini bir kez çek
@@ -79,16 +85,100 @@ export default function Home() {
       })
       .catch((err) => setHata(err.message))
       .finally(() => setYukleniyor(false));
-  };
-
-  const handleNaceYardim = () => {
-    if (!meslekGrubu || meslekGrubu === "Seçiniz") {
+    };
+  //handleNaceYardim isimli bir fonksiyon oluştur.Bu fonksiyon parametre almıyor.Çağrılınca { } içindeki kodları çalıştır.
+  const handleNaceYardim = async () => {
+    if (!meslekGrubu || meslekGrubu === "Seçiniz") { //Meslek grubu boşsa VEYA Meslek grubu "Seçiniz" ise
       setUyari("Lütfen Meslek Grubunu Seçiniz!!!");
       setTimeout(() => setUyari(null), 4000);
       return;
     }
     setUyari(null);
+
+    if(naceYardimAcik){
+      setNaceYardimAcik(false);
+      return;
+    }
+    try {
+      setYukleniyor(true);
+      const data = await getNaceKodlariByMeslek(meslekGrubu);
+      setNaceListesi(data);
+      setNaceYardimAcik(true);
+    } catch (err: unknown) {
+      setUyari(err instanceof Error ? err.message : "Nace kodları yüklenemedi");
+      setTimeout(() => setUyari(null), 4000);
+    } finally {
+      setYukleniyor(false);
+    }
   };
+
+  const handleNaceSec = (kod: string) => {
+    // "10.71.01" -> ["10", "71", "01"]
+    const parcalar = kod.split(".");
+    setNace1(parcalar[0] || ""); //birinci ?? "" nullish coalecing operatör 
+    setNace2(parcalar[1] || "");
+    setNace3(parcalar[2] || "");
+    setNaceYardimAcik(false); // Seçim yapınca paneli kapat
+  };
+
+  function handleExcelIndir (){
+
+    const excelVerisi =[];
+    for (let i =0; i < firmalar.length; i++){
+      const firma =firmalar[i];
+      
+      const meslek =firma.meslekGrubuAd ?firma .meslekGrubuAd: "-"; // ternary operator
+      const nace = firma.naceKoduAd ? firma.naceKoduAd : "-";  //const meslek = firma.meslekGrubuAd || "-";
+      /*
+        let meslek: string;
+        if (firma.meslekGrubuAd) {
+          meslek = firma.meslekGrubuAd;
+        } else {
+          meslek = "-";
+        }
+      */
+      const ilce = firma.ilceAdi ? firma.ilceAdi : "-";
+      const tescilliAdres = firma.tescilliAdresi ? firma.tescilliAdresi : "-";
+      const web = firma.webAdresi ? firma.webAdresi : "-";
+
+      // excelde görünecek sütun adları 
+      excelVerisi.push({
+        "oda sicil no": firma.odaSicilNo,
+        "ticari sicil no": firma.ticariSicilNo,
+        "ünvanı": firma.unvani,
+        "meslek grubu": meslek,
+        "nace kodu": nace,
+        "ilçe": ilce,
+        "tescilli adres": tescilliAdres,
+        "web adresi": web
+      });
+    }
+
+    if (excelVerisi.length===0){
+      setUyari("indirilecek veri yok!!!");
+      setTimeout(function(){
+        setUyari(null);
+      }, 4000);
+      return;
+    }
+    /*
+    funtiyon uyariyiKapat(){
+      setUyari(null);
+    }
+    setTimeout(uyariyiKapat,4000);
+    */
+
+
+    // Elimizdeki düz (flat) JavaScript dizisini (JSON objelerinden oluşan excelVerisi listesini), Excel'in anlayabileceği "çalışma sayfası" (worksheet) formatına dönüştürür.
+    const worksheet =XLSX.utils.json_to_sheet(excelVerisi);
+    //Hafızada yepyeni, tamamen boş bir Excel çalışma kitabı (workbook) dosyası oluşturur.
+    const workbook = XLSX.utils.book_new();
+    //dolu çalışma sayfasını (worksheet), boş çalışma kitabının (workbook) içine yerleştirir.
+    XLSX.utils.book_append_sheet(workbook,worksheet,"Firmalar");
+    //Hafızada oluşturup içini doldurduğumuz çalışma kitabını, son kullanıcının bilgisayarına gerçek bir .xlsx (Excel) dosyası olarak kaydeder (indirmeyi başlatır).
+    XLSX.writeFile(workbook, "IZTO_Firma_rehberi.xlsx")
+  }
+
   
 
   return (
@@ -259,7 +349,7 @@ export default function Home() {
                     type="button"
                     onClick={handleNaceYardim}
                     className="bg-[#00a8ff] hover:bg-[#0097e6] text-white font-bold py-2 px-6 rounded text-sm transition">
-                      Nace Kodu Yardım
+                    {naceYardimAcik ? "Nace Kodu Yardım Kapat" : "Nace Kodu Yardım"}
                     </button>
                     <button onClick={handleSorgula} className="bg-[#4cd137] hover:bg-[#44bd32] text-white font-bold py-2 px-10 rounded text-sm transition">
                       Sorgula
@@ -269,6 +359,7 @@ export default function Home() {
                       Excel
                     </button>
 
+                      
                     {isSearched && !yukleniyor && (
                       <div className={`font-bold text-xs px-4 py-2.5 rounded ml-2 border ${isDarkMode ? 'bg-[#0f243b] text-[#5b95ff] border-[#1f375b]' : 'bg-[#e1f0fa] text-[#0056b3] border-[#b8daff]'}`}>
                         TOPLAM ÜYE FİRMA SAYISI : {toplam}
@@ -276,6 +367,64 @@ export default function Home() {
                     )}
                   </div>
                 </div>
+
+                {/* NACE KODU YARDIM PANELİ */}
+                {naceYardimAcik && (
+                  <div className={`mt-6 border rounded-lg p-4 transition-colors ${isDarkMode ? 'bg-[#0c192d] border-[#162947]' : 'bg-white border-gray-200'}`}>
+                    <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-[#162947] mb-3">
+                      <span className="text-xs font-bold flex items-center gap-1.5 text-gray-800 dark:text-gray-200">
+                        NACE Kodu Yardım
+                      </span>
+                      <span className="text-[11px] text-gray-500">Seçmek istediğiniz satıra tıklayınız.</span>
+                    </div>
+
+                    <div className="overflow-x-auto max-h-72 overflow-y-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead>
+                          <tr className={`border-b ${isDarkMode ? 'border-[#1f375b] text-gray-300' : 'border-gray-200 text-gray-700'}`}>
+                            <th className="p-2 w-28">
+                              <div>Nace Kodu</div>
+                              <input
+                                type="text"
+                                placeholder="Kod ara..."
+                                value={naceFiltreKod}
+                                onChange={(e) => setNaceFiltreKod(e.target.value)}
+                                className={`w-full mt-1 p-1 rounded border text-[11px] font-normal ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white' : 'bg-gray-50 border-gray-300'}`}
+                              />
+                            </th>
+                            <th className="p-2">
+                              <div>Nace Adı</div>
+                              <input
+                                type="text"
+                                placeholder="Nace adında ara..."
+                                value={naceFiltreAd}
+                                onChange={(e) => setNaceFiltreAd(e.target.value)}
+                                className={`w-full mt-1 p-1 rounded border text-[11px] font-normal ${isDarkMode ? 'bg-[#091424] border-[#1f375b] text-white' : 'bg-gray-50 border-gray-300'}`}
+                              />
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {naceListesi
+                            .filter((item) =>
+                              item.naceKodu?.toLowerCase().includes(naceFiltreKod.toLowerCase()) &&
+                              item.naceAdi?.toLowerCase().includes(naceFiltreAd.toLowerCase())
+                            )
+                            .map((item) => (
+                              <tr
+                                key={item.id}
+                                onClick={() => handleNaceSec(item.naceKodu)}
+                                className={`border-b cursor-pointer transition ${isDarkMode ? 'border-[#162947] hover:bg-[#162947]' : 'border-gray-100 hover:bg-blue-50'}`}
+                              >
+                                <td className="p-2 font-bold text-blue-500 whitespace-nowrap">{item.naceKodu}</td>
+                                <td className="p-2">{item.naceAdi}</td>
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
