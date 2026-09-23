@@ -503,7 +503,8 @@ export default function Home() {
                     </button>
                     <span className="text-sm">Sayfa {sayfa} — Toplam {toplam} sonuç</span>
                     <button
-                      disabled={sayfa * 50 >= toplam}
+                      disabled={sayfa * 50 >= toplam} // disabled HTML button'un bir property'sidir. 
+                      // disabled={true} buton kullanılamaz hale gelir. disabled={false} buton kullanılabilir hale gelir.
                       onClick={() => sorgulaYap(sayfa + 1)}
                       className="px-4 py-1.5 rounded border text-sm disabled:opacity-40"
                     >
