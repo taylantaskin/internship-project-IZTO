@@ -56,7 +56,7 @@ export async function getFirmalar(params: SorguParametreleri){
     const sorguMetni = parametreleriHazirla(params);
     const tamUrl = `${API_BASE_URL}?${sorguMetni}`;
 
-    const response = await fetch(tamUrl);
+    const response = await fetch(tamUrl); //const response: Response = await fetch(url);
 
     if (!response.ok){
         throw new Error ("firma verisi çekilemedi");
