@@ -29,6 +29,9 @@ interface SorguParametreleri{
 
 function parametreleriHazirla(params: SorguParametreleri): string{ // java aksine  tipler sağda, ":" dönüş parametresini belirtiyor
     const query = new URLSearchParams(); // urlsearchParams() js deki url parametrelerini hazırlamak için kullanılan bir sınıf
+
+    //encode query parameters" dediğinde kastedilen şey, URLSearchParams'ın arka planda Türkçe karakterleri, boşlukları ve özel karakterleri URL standardına uygun hale çevirmesidir. Bu dönüşümü sen manuel yapmıyorsun; URLSearchParams senin yerine otomatik yapıyor. Örneğin, "ü" harfi "%C3%BC" olarak, boşluk " " "%20" olarak ve "&" "&" olarak kodlanır. Bu sayede URL'ler güvenli ve standart bir formatta olur.
+
     if (params.unvani) { // if : false, 0, NaN, "", null, undefined gibi değerler falsy döner
     query.set("unvani", params.unvani); 
     }

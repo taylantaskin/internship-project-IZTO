@@ -84,7 +84,8 @@ export default function Home() {
         setIsSearched(true);
       })
       .catch((err) => setHata(err.message)) // .catch() aslında "bu async işlem başarısız olursa ne yapacağım?" kısmıdır.
-      .finally(() => setYukleniyor(false));
+      .finally(() =>{
+        setTimeout(() => setYukleniyor(false), 1000);})
   };
 
   // handleNaceYardim isimli bir fonksiyon oluştur. Bu fonksiyon parametre almıyor. Çağrılınca { } içindeki kodları çalıştır.

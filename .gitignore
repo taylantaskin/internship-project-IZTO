@@ -26,3 +26,5 @@ pnpm-debug.log*
 .env*.local
 next-env.d.ts
 .vscode/
+
+diagrams/
